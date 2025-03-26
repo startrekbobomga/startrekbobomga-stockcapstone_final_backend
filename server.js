@@ -28,7 +28,6 @@ const anthropic = new Anthropic({
   apiKey: '',
 });
 // Middleware
-const cors = require('cors');
 app.use(cors({
   origin: 'https://startrekbobomga.github.io', // ✅ Replace with your GitHub Pages domain
   credentials: true
