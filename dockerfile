@@ -1,27 +1,33 @@
-# Use an official Node.js image with Debian base
+# Use an official Node.js image (includes Debian)
 FROM node:18
 
-# Install Python and pip
+# Install Python & venv support
 RUN apt-get update && \
-    apt-get install -y python3 python3-pip && \
+    apt-get install -y python3 python3-pip python3-venv && \
     ln -s /usr/bin/python3 /usr/bin/python
 
-# Set the working directory
+# Set working directory
 WORKDIR /app
 
-# Copy Node.js dependencies
+# Copy and install Node.js dependencies
 COPY package*.json ./
 RUN npm install
 
-# Copy Python requirements and install
+# Copy Python requirements
 COPY requirements.txt ./
+
+# Set up Python virtual environment
+RUN python -m venv /opt/venv
+ENV PATH="/opt/venv/bin:$PATH"
+
+# Install Python dependencies inside the venv
 RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy the rest of the application files
+# Copy all project files
 COPY . .
 
 # Expose port
 EXPOSE 5000
 
-# Start the Node.js server
+# Start Node.js server
 CMD ["node", "server.js"]
