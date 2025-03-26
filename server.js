@@ -14,13 +14,13 @@ const app = express();
 
 // Configure OpenAI
 const openai = new OpenAI({
-    apiKey: 'OPEN_AI_API_KEY' 
+    apiKey: process.env.OPENAI_API_KEY 
 });
 
 // Configure Deepseek
 const deepseek = new OpenAI({
   baseURL: 'https://api.deepseek.com/v1',
-  apiKey: process.env.OPENAI_API_KEY,
+  apiKey: '',
 });
 
 // Configure Anthropic
