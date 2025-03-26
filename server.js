@@ -160,7 +160,7 @@ app.get('/fetch-latest-news', async (req, res) => {
 async function fetchStockData() {
   try {
     // Fetch tickers
-    const tickersResponse = await fetch("http://localhost:5000/api/tickers");
+    const tickersResponse = await fetch("https://startrekbobomga-stockcapstone-final.onrender.com/api/tickers");
     const tickersData = await tickersResponse.json();
     const tickers = tickersData.tickers;
 
@@ -173,7 +173,7 @@ async function fetchStockData() {
     const stockData = await Promise.all(
       tickers.map(async (symbol) => {
         try {
-          const response = await fetch(`http://localhost:5000/api/stock/${symbol}`);
+          const response = await fetch(`https://startrekbobomga-stockcapstone-final.onrender.com/api/stock/${symbol}`);
           const history = await response.json();
 
           if (!history || history.length < 2) {
@@ -720,8 +720,8 @@ app.post('/report', async (req, res) => {
   try {
       // Fetch latest news and closing price differences
       const [newsResponse, diffResponse] = await Promise.all([
-          axios.get('http://localhost:5000/fetch-latest-news'),
-          axios.get('http://localhost:5000/fetch-latest-diff')
+          axios.get('https://startrekbobomga-stockcapstone-final.onrender.com/fetch-latest-news'),
+          axios.get('https://startrekbobomga-stockcapstone-final.onrender.com/fetch-latest-diff')
       ]);
 
       const latestNews = newsResponse.data;

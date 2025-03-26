@@ -13,7 +13,7 @@ client = pymongo.MongoClient(MONGO_URI)
 db = client[DATABASE_NAME]
 
 def fetch_tickers():
-    url = "http://localhost:5000/api/tickers"
+    url = "https://startrekbobomga-stockcapstone-final.onrender.com/api/tickers"
     try:
         response = requests.get(url)
         response.raise_for_status()  # Raise an error for bad responses (4xx and 5xx)
