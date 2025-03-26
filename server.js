@@ -44,7 +44,6 @@ mongoose.connect(process.env.MONGO_URI, { useNewUrlParser: true, useUnifiedTopol
   .catch(err => console.error('MongoDB connection error:', err));
 
 // Serve static files (e.g., index.html)
-app.use(express.static(path.join(__dirname, 'public')));
 
 // API URL and headers for the request rapidapi
 const url_news = 'https://yahoo-finance15.p.rapidapi.com/api/v1/markets/news?tickers=AAPL%2CTSLA';
@@ -246,8 +245,9 @@ app.get('/api/stock/:symbol', async (req, res) => {
   
 // Fallback route for frontend (to serve index.html when accessing root)
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'index.html'));  // Update if index.html is in a different folder
-});
+    res.json({ message: "API is running 🚀" });
+  });
+  
 
 // API route to fetch recent news by stock ticker
 app.get('/api/news/:ticker', async (req, res) => {
