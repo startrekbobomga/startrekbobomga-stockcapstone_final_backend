@@ -1,0 +1,13 @@
+pymongo
+yfinance
+beautifulsoup4
+selenium
+python-dotenv
+sys
+json
+numpy
+pandas
+tensorflow
+dotenv
+csv
+time
