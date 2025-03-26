@@ -5,7 +5,7 @@ import pandas as pd
 import pytz
 import os
 from dotenv import load_dotenv
-
+load_dotenv()
 MONGO_URI =  os.getenv("MONGO_URI") # Change to your MongoDB URI if needed
 DATABASE_NAME = "finance2"
 

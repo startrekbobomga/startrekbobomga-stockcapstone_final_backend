@@ -10,7 +10,7 @@ from tensorflow.keras.layers import LSTM, Dense
 import yfinance as yf
 import os
 from dotenv import load_dotenv
-
+load_dotenv()
 # Suppress TensorFlow warnings
 os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'
 
