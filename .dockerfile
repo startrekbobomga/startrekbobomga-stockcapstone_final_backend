@@ -1,4 +1,4 @@
-# Use an official Node.js base image with Python preinstalled
+# Use an official Node.js image with Debian base
 FROM node:18
 
 # Install Python and pip
@@ -6,24 +6,22 @@ RUN apt-get update && \
     apt-get install -y python3 python3-pip && \
     ln -s /usr/bin/python3 /usr/bin/python
 
-# Set working directory
+# Set the working directory
 WORKDIR /app
 
-# Copy Node.js files
+# Copy Node.js dependencies
 COPY package*.json ./
-
-# Install Node.js dependencies
 RUN npm install
 
-# Copy Python requirements and Python files
+# Copy Python requirements and install
 COPY requirements.txt ./
-RUN pip3 install -r requirements.txt
+RUN pip install --no-cache-dir -r requirements.txt
 
-# Copy rest of the project files
+# Copy the rest of the application files
 COPY . .
 
-# Expose port (use the same as in your server.js)
+# Expose port
 EXPOSE 5000
 
-# Start your server
+# Start the Node.js server
 CMD ["node", "server.js"]
