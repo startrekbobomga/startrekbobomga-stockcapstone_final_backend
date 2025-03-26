@@ -27,9 +27,12 @@ const deepseek = new OpenAI({
 const anthropic = new Anthropic({
   apiKey: '',
 });
-
 // Middleware
-app.use(cors()); // To allow cross-origin requests
+const cors = require('cors');
+app.use(cors({
+  origin: 'https://startrekbobomga.github.io', // ✅ Replace with your GitHub Pages domain
+  credentials: true
+}));
 app.use(express.json()); // To parse JSON request bodies
 app.use(bodyParser.json());
 
