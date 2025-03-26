@@ -1,9 +1,0 @@
-pandas
-numpy
-pymongo
-yfinance
-selenium
-scikit-learn
-tensorflow
-pytz
-requests
