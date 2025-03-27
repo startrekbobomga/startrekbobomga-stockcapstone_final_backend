@@ -14,7 +14,7 @@ const app = express();
 
 // Configure OpenAI
 const openai = new OpenAI({
-    apiKey: process.env.OPENAI_API_KEY 
+    apiKey: process.env.OPENAI_API_KEY,
 });
 
 // Configure Deepseek
@@ -244,10 +244,7 @@ app.get('/api/stock/:symbol', async (req, res) => {
   });
   
 // Fallback route for frontend (to serve index.html when accessing root)
-app.get('/', (req, res) => {
-    res.json({ message: "API is running 🚀" });
-  });
-  
+
 
 // API route to fetch recent news by stock ticker
 app.get('/api/news/:ticker', async (req, res) => {
