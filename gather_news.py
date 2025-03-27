@@ -1,12 +1,4 @@
-import csv
-from selenium import webdriver
-from selenium.webdriver.chrome.service import Service
-from selenium.webdriver.common.by import By
-import time
-import getpass
-from selenium.common.exceptions import NoSuchElementException
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions as EC
+import requests
 import pymongo
 import sys
 import os
@@ -16,65 +8,40 @@ from dotenv import load_dotenv
 load_dotenv()
 
 MONGO_URI = os.getenv("MONGO_URI")
+NEWS_API_KEY = os.getenv("46669fcd994d4ab5a2e0b855f556d8d2")  # Make sure to define this in .env
 DATABASE_NAME = "finance2"
+
 client = pymongo.MongoClient(MONGO_URI)
 db = client[DATABASE_NAME]
+
 stocklist = sys.argv[1:]  # skip script name
 
-def scrape_yahoo_news_titles_and_links(ticker):
+def fetch_newsapi_articles(ticker):
     """
-    Scrape news titles and their links from Yahoo Finance's news section for a specific stock ticker.
+    Fetch latest news articles for a ticker using NewsAPI.
     """
-    # Headless Chrome setup for Render
-    options = webdriver.ChromeOptions()
-    options.binary_location = "/usr/bin/chromium"
-    options.add_argument("--headless")
-    options.add_argument("--disable-gpu")
-    options.add_argument("--no-sandbox")
-    options.add_argument("--disable-dev-shm-usage")
-
-    driver = webdriver.Chrome(executable_path="/usr/bin/chromedriver", options=options)
-
+    url = f"https://newsapi.org/v2/everything?q={ticker}&sortBy=publishedAt&apiKey={NEWS_API_KEY}"
     try:
-        url = f"https://finance.yahoo.com/quote/{ticker}/news/"
-        driver.get(url)
-
-        WebDriverWait(driver, 30).until(
-            EC.presence_of_all_elements_located((By.XPATH, "//a[contains(@class, 'subtle-link')]"))
-        )
-
-        news_items = set()
-        while len(news_items) < 50:
-            link_elements = driver.find_elements(By.XPATH, "//a[contains(@class, 'subtle-link') and contains(@class, 'fin-size-small')]")
-            for link_element in link_elements:
-                title = link_element.get_attribute('aria-label')
-                url = link_element.get_attribute('href')
-                if title and url:
-                    news_items.add((title, url))
-
-            driver.execute_script("window.scrollBy(0, 1000);")
-            time.sleep(2)
-
-            if len(news_items) >= 50 or not link_elements:
-                break
-
+        response = requests.get(url)
+        if response.status_code == 200:
+            articles = response.json().get("articles", [])[:10]
+            return [(article["title"], article["url"]) for article in articles if article.get("title") and article.get("url")]
+        else:
+            print(f"NewsAPI Error: {response.status_code} - {response.text}")
+            return []
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"Exception while calling NewsAPI: {e}")
+        return []
 
-    finally:
-        driver.quit()
-
-    return list(news_items)
-
-def actual_scrapping_and_saving_links_titles(tick):
+def actual_fetching_and_saving_news(ticker):
     try:
-        news_titles = scrape_yahoo_news_titles_and_links(tick)
-        print("Successfully scraped", tick)
+        news_items = fetch_newsapi_articles(ticker)
+        print("Successfully fetched news for", ticker)
 
-        COLLECTION_NAME = "stock_news_" + tick
+        COLLECTION_NAME = "stock_news_" + ticker
         collection = db[COLLECTION_NAME]
 
-        for title, link in news_titles:
+        for title, link in news_items:
             try:
                 collection.insert_one({"title": title, "link": link})
             except Exception as e:
@@ -82,12 +49,12 @@ def actual_scrapping_and_saving_links_titles(tick):
 
         print("News items have been stored")
     except Exception as e:
-        print(f"An error occurred: {e}")
+        print(f"An error occurred for {ticker}: {e}")
 
-def bulk_scrapping_and_saving(stock_list):
+def bulk_fetch_and_store_news(stock_list):
     for ticker in stock_list:
-        actual_scrapping_and_saving_links_titles(ticker)
+        actual_fetching_and_saving_news(ticker)
         print("")
     return
 
-bulk_scrapping_and_saving(stocklist)
+bulk_fetch_and_store_news(stocklist)
