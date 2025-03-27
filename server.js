@@ -50,7 +50,7 @@ const url_news = 'https://yahoo-finance15.p.rapidapi.com/api/v1/markets/news?tic
 const options_news = {
   method: 'GET',
   headers: {
-    'x-rapidapi-key': '',
+    'x-rapidapi-key': '7b95107557msh3a33c9b1f8f23c2p1e420djsn23ee9a07c504',
     'x-rapidapi-host': 'yahoo-finance15.p.rapidapi.com'
   }
 };
