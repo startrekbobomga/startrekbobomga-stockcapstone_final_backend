@@ -8,7 +8,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 MONGO_URI = os.getenv("MONGO_URI")
-NEWS_API_KEY = os.getenv("46669fcd994d4ab5a2e0b855f556d8d2")  # Make sure to define this in .env
+NEWS_API_KEY = "46669fcd994d4ab5a2e0b855f556d8d2"  # Make sure to define this in .env
 DATABASE_NAME = "finance2"
 
 client = pymongo.MongoClient(MONGO_URI)
