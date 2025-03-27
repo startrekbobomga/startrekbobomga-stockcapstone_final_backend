@@ -6,9 +6,4 @@ selenium
 scikit-learn
 tensorflow
 pytz
-requests
-dotenv
-time
-sys
-os
-request
+python-dotenv
